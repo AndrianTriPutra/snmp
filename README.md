@@ -31,8 +31,9 @@
 - go run . agent
 - open terminal b, user don't need acces root for client
 - cd snmp client
-- go run . get
-- and check again terminal a
+- snmpwalk -v2c -c public localhost:166 .1.3.6.1.2.1.1.1
+- go run . get or go run . walk
+- and recheck terminal a
 
 
 ## dependency
