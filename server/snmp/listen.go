@@ -11,7 +11,7 @@ import (
 func Listen(host string, ip string, port uint16, community string, timeout time.Duration) {
 
 	tl := gosnmp.NewTrapListener()
-	tl.OnNewTrap = trapHandle
+	tl.OnNewTrap = trapHandler
 	params := &gosnmp.GoSNMP{
 		Target:    ip,
 		Port:      port,
@@ -31,7 +31,7 @@ func Listen(host string, ip string, port uint16, community string, timeout time.
 	}
 }
 
-func trapHandle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
+func trapHandler(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 	for _, v := range packet.Variables {
 		switch v.Type {
 		case gosnmp.OctetString:
