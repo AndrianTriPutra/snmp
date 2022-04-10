@@ -25,7 +25,7 @@ func SnmpWalk(ip string, port uint16, community string, timeout time.Duration, o
 	}
 	defer params.Conn.Close()
 
-	result, err := params.BulkWalkAll(oid)
+	result, err := params.WalkAll(oid)
 	if err != nil {
 		log.Printf("Walk Error: %v\n", err)
 		return err
