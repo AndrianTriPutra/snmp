@@ -5,7 +5,7 @@
 - i recomeded for you install snmp, you can follow this link
 - https://lms.onnocenter.or.id/wiki/index.php/SNMP:_UBUNTU_20.04_instalasi_SNMP
 - https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-an-snmp-daemon-and-client-on-ubuntu-18-04
-- you can check command snmp with
+- you can check command line snmp with
 - snmpwalk -v2c -c public localhost:161 1.3.6.1.2.1.1
 - snmpget -v2c -c public localhost:161 1.3.6.1.2.1.1.1.0
 
@@ -20,7 +20,7 @@
 - open terminal b, user don't need acces root for client
 - cd snmp client
 - use command line 
-- snmptrap -v 2c -c public localhost:166 '' . .1.3.6.1.2.1.1.1.0 s "Hello, this is an SNMP trap."
+- snmptrap -v2c -c public localhost:166 '' . .1.3.6.1.2.1.1.1.0 s "Hello, this is an SNMP trap."
 - check terminal a
 - and switch to terminal b, go run . send
 - and recheck terminal a
