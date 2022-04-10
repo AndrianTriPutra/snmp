@@ -8,9 +8,23 @@ import (
 	"github.com/twsnmp/gosnmp"
 )
 
-var OID = [1]string{".1.3.6.1.2.1.1.1.0"}
+var OID = [4]string{".1.3.6.1.2.1.1.1.0",
+	".1.3.6.1.2.1.1.1.1",
+	".1.3.6.1.2.1.1.1.2",
+	".1.3.6.1.2.1.1.1.3"}
+
+var Data struct {
+	Zero  string
+	One   int
+	Two   uint32
+	Three float32
+}
 
 func Agent(ip string, port uint16, community string, timeout time.Duration) {
+	Data.One = -1000
+	Data.Two = 1000
+	Data.Three = 3.14
+
 	forever := make(chan os.Signal, 1)
 
 	g := &gosnmp.GoSNMP{}
@@ -36,15 +50,39 @@ func Agent(ip string, port uint16, community string, timeout time.Duration) {
 }
 
 func handler(a *gosnmp.GoSNMPAgent) {
-	a.AddMibList(OID[0], gosnmp.OctetString, getOne)
+	a.AddMibList(OID[0], gosnmp.OctetString, getZero)
+	a.AddMibList(OID[1], gosnmp.Integer, getOne)
+	a.AddMibList(OID[2], gosnmp.Counter32, getTwo)
+	a.AddMibList(OID[3], gosnmp.OpaqueFloat, getThree)
 }
 
-func getOne(oid string) interface{} {
+func getZero(oid string) interface{} {
 	loc, _ := time.LoadLocation("Asia/Jakarta")
 	//ts := time.Now().UTC()
 	ts := time.Now().In(loc)
-	timestamp := ts.Format(time.RFC3339)
+	Data.Zero = ts.Format(time.RFC3339)
 
-	log.Printf("[OID:%s] [value:%s]", OID[0], timestamp)
-	return timestamp
+	log.Printf("[OID:%s] [value:%s]", OID[0], Data.Zero)
+	return Data.Zero
+}
+
+func getOne(oid string) interface{} {
+	Data.One += 1
+
+	log.Printf("[OID:%s] [value:%v]", OID[1], Data.One)
+	return Data.One
+}
+
+func getTwo(oid string) interface{} {
+	Data.Two += 1
+
+	log.Printf("[OID:%s] [value:%v]", OID[1], Data.Two)
+	return Data.Two
+}
+
+func getThree(oid string) interface{} {
+	Data.Three += 0.1
+
+	log.Printf("[OID:%s] [value:%f]", OID[1], Data.Three)
+	return Data.Three
 }
